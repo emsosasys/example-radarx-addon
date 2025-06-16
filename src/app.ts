@@ -16,11 +16,11 @@ import configureSession from "./config/session"
 
 const options = {
   key: fs.readFileSync(
-    path.join(__dirname, "..", "./addon-local.dev.key"),
+    path.join(__dirname, "..", "./certs/addon-local.dev.key"),
     "utf8",
   ),
   cert: fs.readFileSync(
-    path.join(__dirname, "..", "./addon-local.dev.crt"),
+    path.join(__dirname, "..", "./certs/addon-local.dev.crt"),
     "utf8",
   ),
 }
