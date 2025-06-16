@@ -1,0 +1,218 @@
+<div class="overflow-x-auto rounded-lg border border-neutral-content/20 w-full">
+  <table class="table table-zebra table-pin-rows">
+    <thead>
+      <tr class="text-center bg-base-300">
+        <th class="text-start bg-base-300 z-20">Estudiante</th>
+        <td class="text-start">Reclutado</td>
+        <td class="text-start">Último curso completado</td>
+        <td class="text-start">Guía actual</td>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (data && data.students && data.students.length > 0) { %> <%
+      data.students.forEach((student) => { %>
+      <tr>
+        <th class="font-semibold text-nowrap bg-base-300">
+          <div class="flex flex-col gap-2">
+            <a
+              class="link link-hover flex items-center gap-1 max-w-fit font-bold"
+              target="_blank"
+              href="https://radarx.cincinnatus.edu.do/students/<%= Buffer.from(student.id).toString('base64') %>">
+              <%= student.fullname %>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M15 3h6v6" />
+                <path d="M10 14 21 3" />
+                <path
+                  d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              </svg>
+            </a>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <% if (student?.school) { %>
+              <span class="text-sm opacity-80 flex items-center gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-school">
+                  <path d="m4 6 8-4 8 4" />
+                  <path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2" />
+                  <path d="M14 22v-4a2 2 0 0 0-4 0v4" />
+                  <path d="M18 5v17" />
+                  <path d="M6 5v17" />
+                  <circle cx="12" cy="9" r="2" />
+                </svg>
+                <%= student.school %>
+              </span>
+              <% } %> <% if (!student?.is_active) { %>
+              <span class="badge badge-error badge-sm">Desactivada</span>
+              <% } %> <% if (student?.status) { %>
+              <span
+                class="<%= 'badge badge-sm uppercase font-semibold ' + STUDENT_STATUS_COLORS[student?.status] %>">
+                <%= student.status %>
+              </span>
+              <% } %>
+            </div>
+          </div>
+        </th>
+
+        <td class="text-nowrap">
+          <% if (student?.enrolledAt) { %>
+          <div class="font-medium">
+            <%= formatRecruitmentDate(student?.enrolledAt) %>
+          </div>
+          <p class="text-sm opacity-75">
+            hace <%= humanReadableDifferenceShort(new Date().toISOString(), new
+            Date(student?.enrolledAt).toISOString()) %>
+          </p>
+          <% } else { %>
+          <span class="text-error">No disponible</span>
+          <% } %>
+        </td>
+
+        <td class="text-nowrap">
+          <% if (student?.lastCourseCompleted) { %>
+          <div class="space-y-2">
+            <p class="flex items-center gap-1.5 font-medium">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 7v14" />
+                <path d="M16 12h2" />
+                <path d="M16 8h2" />
+                <path
+                  d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+                <path d="M6 12h2" />
+                <path d="M6 8h2" />
+              </svg>
+              <%= student.lastCourseCompleted.title %>
+            </p>
+
+            <p class="flex items-center gap-1.5 text-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="6" cy="19" r="3" />
+                <path
+                  d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" />
+                <circle cx="18" cy="5" r="3" />
+              </svg>
+              <%= student.lastCourseCompleted.Path %>
+            </p>
+
+            <div class="flex items-center gap-1.5 text-sm italic">
+              <% if (student.lastCourseCompleted.doneAt) { %>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="13" r="8" />
+                <path d="M5 3 2 6" />
+                <path d="m22 6-3-3" />
+                <path d="M6.38 18.7 4 21" />
+                <path d="M17.64 18.67 20 21" />
+                <path d="m9 13 2 2 4-4" />
+              </svg>
+              <p>
+                hace <%= humanReadableDifference(new
+                Date(student.lastCourseCompleted.doneAt).toISOString(), new
+                Date(Date.now()).toISOString()) %>
+              </p>
+              <% } else { %>
+              <span class="badge badge-sm badge-error gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="13" r="8" />
+                  <path d="M5 3 2 6" />
+                  <path d="m22 6-3-3" />
+                  <path d="M6.38 18.7 4 21" />
+                  <path d="M17.64 18.67 20 21" />
+                  <path d="M9 13h6" />
+                </svg>
+                Sin fecha
+              </span>
+              <% } %>
+            </div>
+          </div>
+          <% } else { %>
+          <span class="text-error"> Sin curso completado </span>
+          <% } %>
+        </td>
+
+        <td class="text-nowrap">
+          <div class="flex flex-col gap-2">
+            <p
+              class="<%= !student.path?.title ? 'text-error font-medium' : 'font-medium' %>">
+              <%= student.path?.title || 'No definida' %>
+            </p>
+
+            <div class="flex items-center gap-2">
+              <div class="w-full max-w-48">
+                <progress
+                  class="progress progress-primary w-full"
+                  style="<% if (student.color) { %>--fallback-p: <%= student.color %>; --tw-bg-opacity: 1;<% } %>"
+                  value="<%= Math.round(student.progress || 0) %>"
+                  max="100"></progress>
+              </div>
+              <span class="text-sm font-medium w-10 text-right">
+                <%= Math.round(student.progress) || 0 %>%
+              </span>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td colspan="4" class="text-center py-8 bg-base-100">
+          <div class="flex flex-col items-center gap-2 py-8">
+            <p class="font-medium">Sin resultados</p>
+          </div>
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

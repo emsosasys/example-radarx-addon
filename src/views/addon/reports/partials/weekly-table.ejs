@@ -1,0 +1,139 @@
+<div class="overflow-auto rounded-lg border border-neutral-content/20">
+  <table class="table table-pin-rows table-pin-cols w-full">
+    <thead>
+      <tr class="text-center bg-base-300">
+        <th class="text-start bg-base-300 z-20">Estudiante</th>
+        <td>Reclutado</td>
+        <% for (let i = TOTAL_WEEKS; i > 0; i--) { const rawDate =
+        data.dates[`${i}w`]; const date = rawDate ? new Date(rawDate) : null;
+        const formattedDate = date ? new
+        Intl.DateTimeFormat('es-ES').format(date) : 'Fecha inválida'; const week
+        = i * -7; %>
+        <td>
+          <div class="flex items-center flex-col">
+            <p class="font-medium"><%= week %> días</p>
+            <span class="text-xs opacity-70">(<%= formattedDate %>)</span>
+          </div>
+        </td>
+        <% } %>
+        <td class="font-bold">
+          <div class="flex items-center flex-col">
+            <p>Hoy</p>
+            <span class="text-xs opacity-80">
+              (<%= data.dates.current ? new
+              Intl.DateTimeFormat('es-ES').format(new Date(data.dates.current))
+              : 'Fecha inválida' %>)
+            </span>
+          </div>
+        </td>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if (data.students && data.students.length > 0) {
+      data.students.forEach(student => { %>
+      <tr>
+        <th class="font-semibold text-nowrap bg-base-300">
+          <div class="flex flex-col items-start gap-2">
+            <a
+              class="link link-hover flex items-center gap-1 max-w-fit font-bold"
+              target="_blank"
+              href="https://radarx.cincinnatus.edu.do/students/<%= Buffer.from(student.id).toString('base64') %>">
+              <%= student.fullname %>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-external-link">
+                <path
+                  d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" x2="21" y1="14" y2="3" />
+              </svg>
+            </a>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <% if (student.school) { %>
+              <span class="text-sm opacity-80 flex items-center gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-school">
+                  <path d="m4 6 8-4 8 4" />
+                  <path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2" />
+                  <path d="M14 22v-4a2 2 0 0 0-4 0v4" />
+                  <path d="M18 5v17" />
+                  <path d="M6 5v17" />
+                  <circle cx="12" cy="9" r="2" />
+                </svg>
+                <%= student.school %>
+              </span>
+              <% } %> <% if (student.status) { %>
+              <span
+                class="badge badge-sm uppercase font-semibold <%= STUDENT_STATUS_COLORS[student.status] %>">
+                <%= student.status %>
+              </span>
+              <% } %> <% if (!student.is_active) { %>
+              <span class="badge badge-error badge-sm">Desactivada</span>
+              <% } %>
+            </div>
+          </div>
+        </th>
+
+        <td class="text-center bg-base-100">
+          <% if (student.enrolledAt) { %>
+          <div class="font-medium">
+            <%= formatRecruitmentDate(student.enrolledAt) %>
+          </div>
+          <p class="text-sm italic opacity-75">
+            hace <%= humanReadableDifferenceShort(new Date().toISOString(), new
+            Date(student.enrolledAt).toISOString()) %>
+          </p>
+          <% } else { %>
+          <span>-</span>
+          <% } %>
+        </td>
+
+        <% for (let i = TOTAL_WEEKS; i > 0; i--) { const weekKey = `${i}w`;
+        const weekPoint = Math.round(student.coursesData[weekKey] || 0); const
+        weekColor = student.colors[weekKey] || ''; %>
+        <td
+          class="font-medium text-center"
+          style="background-color: <%= weekColor %>; color: #000">
+          <%= weekPoint %>%
+        </td>
+        <% } %>
+
+        <td
+          class="font-bold text-center"
+          style="background-color: <%= student.colors.current %>; color: #000">
+          <%= Math.round(student.coursesData.current || 0) %>%
+        </td>
+      </tr>
+      <% }) } else { %>
+      <tr>
+        <td
+          colspan="<%= TOTAL_WEEKS + 3 %>"
+          class="text-center py-8 bg-base-100">
+          <div class="flex flex-col items-center gap-2 py-8">
+            <p class="font-medium">Sin resultados</p>
+          </div>
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,12 @@
+<script>
+  (function () {
+    const result = <%- JSON.stringify({ success, error: message || null }) %>
+
+    if (window.opener) {
+      window.opener.postMessage(result, '*');
+      window.close();
+    } else {
+      document.body.innerHTML = '<h3 style="text-align:center;">No se pudo completar el proceso. Cerrá esta ventana.</h3>'
+    }
+  })()
+</script>

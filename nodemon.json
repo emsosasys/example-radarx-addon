@@ -1,0 +1,5 @@
+{
+  "watch": ["src", "views"],
+  "ext": "ts,ejs",
+  "exec": "node -r @swc-node/register src/server.ts"
+}

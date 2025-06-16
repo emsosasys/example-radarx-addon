@@ -1,0 +1,29 @@
+<% if (typeof error !== "undefined" && error) { %>
+<div class="flex justify-center items-center h-screen max-w-xs mx-auto">
+  <span class="text-error"><%= error %></span>
+</div>
+<% } else { %>
+<div id="school-container" class="flex justify-center items-center h-screen">
+  <%- include('../../partials/_loading') %>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", async () => {
+    const container = document.getElementById("school-container")
+    try {
+      const res = await fetch(window.location.href, {
+        headers: {
+          "X-Fetch-Data-Only": "true",
+        },
+      })
+      const html = await res.text()
+      container.innerHTML = html
+    } catch (err) {
+      container.innerHTML = `
+            <div class="text-center">
+              <p class="text-error font-bold">Ocurrió un error cargando los datos.</p>
+            </div>`
+    }
+  })
+</script>
+<% } %>

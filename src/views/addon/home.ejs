@@ -1,0 +1,35 @@
+<section
+  class="container mx-auto py-8 px-4 flex-grow min-h-screen flex flex-col items-center text-center">
+  <h2 class="text-3xl font-bold mb-4">Hola, <%= user.fullName %> 👋</h2>
+
+  <% if (insideAddon && user && user.role && ["facilitator",
+  "admin"].includes(user.role)) { %>
+  <p class="text-lg mb-6">
+    Aquí puedes crear los adjuntos para los reportes. Elige una de las
+    siguientes opciones:
+  </p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md">
+    <a href="/attachments/weekly" class="btn btn-primary w-full">
+      Crear adjunto de Progreso académica
+    </a>
+
+    <a href="/attachments/school" class="btn btn-secondary w-full">
+      Crear adjunto de Estatus académica
+    </a>
+  </div>
+  <% }%> <% if (["student", "admin", "facilitator"].includes(user.role)) { %>
+  <div class="w-full max-w-md">
+    <h3 class="text-xl font-semibold mb-3">Accesos rápidos a tus reportes</h3>
+    <ul
+      class="menu bg-base-100 rounded-box shadow-lg w-full border border-neutral-content/20">
+      <% if (user.role === "student") { %>
+      <li><a href="/students/weekly/progress">Progreso académico</a></li>
+      <li><a href="/students/school/progress">Estatus académico</a></li>
+      <% } %> <% if (["admin", "facilitator"].includes(user.role)) { %>
+      <li><a href="/teachers/weekly/progress">Progreso académico</a></li>
+      <li><a href="/teachers/school/progress">Estatus académico</a></li>
+      <% } %>
+    </ul>
+  </div>
+  <% } %>
+</section>

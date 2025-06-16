@@ -1,0 +1,24 @@
+<div
+  id="global-loader"
+  class="flex items-center justify-center bg-base-100 bg-opacity-80 hidden overflow-hidden fixed inset-0 z-50">
+  <div class="flex flex-col items-center gap-2">
+    <%- include('../partials/_loading') %>
+  </div>
+</div>
+
+<script>
+  const loader = document.getElementById("global-loader")
+  window.addEventListener("beforeunload", () =>
+    loader?.classList.remove("hidden"),
+  )
+
+  window.addEventListener("DOMContentLoaded", () =>
+    loader?.classList.add("hidden"),
+  )
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      loader?.classList.add("hidden")
+    }
+  })
+</script>
